@@ -1,33 +1,4 @@
-import random
-
-type
-  clientType = object
-    class*: string
-    item*: string
-    coin*: int
-    wantBuy*: bool
-
-var
-  classes: array[2, string]
-  items: array[2, string]
-
-classes = ["Воин", "Лучник"]
-items = ["Меч", "Лук"]
-
-randomize(234)
-proc randBool(): bool =
-  var r = rand(1)
-  if(r == 1): return true
-  return false
-
-proc newClient(): clientType =
-  let r = rand(1)
-  result.class = classes[r]
-  result.item = items[r]
-  result.coin = 10
-  result.wantBuy = randBool()
-
-
+import Db
 
 var money = 100
 
@@ -42,38 +13,33 @@ echo "(У Вас ", money, " золотых)"
 
 echo ""
 
-var input = 'q'
-while input != 'z':
-  var client: clientType = newClient()
+while true:
+  var (classType, want, itemType) = getRandomClient()
 
   echo "============================="
   echo "У Вас новый клиент!"
-  echo "Класс: ", client.class
-  if not client.wantBuy:
-    echo "Продает: ", client.item
-  else:
-    echo "Покупает: ", client.item
-  echo "По цене: ", client.coin
+  echo "Класс: ", classType.name
+  case want
+    of Want.Buy: echo "Покупает: ", itemType
+    of Want.Sell: echo "Продает: ", itemType
+  echo "По цене: ", 10
   echo "============================="
 
   echo ""
-  if (client.wantBuy == false) :
-    echo "[X] Купить"
-  else:
-    echo "[X] Продать"
+  case want
+    of Want.Buy: echo "[X] Продать"
+    of Want.Sell:
+      if(money-10>0): echo "[X] Купить"
+  
   echo "[C] Отказаться"
 
-  input = readChar(stdin)
+  var input = readChar(stdin)
   if input == 'X' or input == 'x':
-    if not client.wantBuy:
-      money -= client.coin
+    if want == Want.Buy and money-10>0:
+      money += 10
     else:
-      money += client.coin
-    echo "Осталось монет: ", money
+      money -= 10
+    echo "Монет: ", money
 
-  echo "Нажмите 'z', чтобы завершить игру"
   input = readChar(stdin)
-
-echo "Нажмите Enter, чтобы завершить игру"
-discard readLine(stdin)
-echo "Пока!"
+  
