@@ -4,7 +4,7 @@ type
   Want* = enum
     Buy, Sell
 
-  ItemType = enum
+  ItemType* = enum
     Sword, Bow, Knife
 
   ClassType = tuple

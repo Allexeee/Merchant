@@ -1,25 +1,10 @@
 import Db, terminal
 
-var money = 100
+var 
+  money = 100
+  inventory: seq[ItemType];
 
-eraseScreen(stdin)
-setCursorPos(stdin, 0, 0)
-echo "Привет, торговец, как тебя зовут?"
-let name: string = readLine(stdin)
-hideCursor()
-
-echo """Отлично! Итак, """, name,
-    """, ты должен покупать товары у одних клиентов и продавать их другим.
-  Это просто!
-  Но смотри - не останься без денег и товара
-  Вот тебе склад туда залезут любые 10 предметов
-  Ну а денег у тебя, думаю найдется
-  (У Вас """, money, """ золотых)
-  """
-
-echo "Нажмите на любую клавишу, чтобы продолжить"
-
-discard getch()
+include Hello
 
 var i: int = 0
 while true:
@@ -36,12 +21,24 @@ while true:
     of Want.Sell: echo "Продает: ", itemType, " по цене 10 (можно продать за 12)"
   echo "============================="
   echo "У вас ", money, " монет"
-
+  var str:string = ""
+  for i, value in inventory:
+    str = str & "\t" & $value
+  echo "Инвентарь: ",str
   echo ""
+  let itemIndex = inventory.find(itemType) 
   case want
-    of Want.Buy: echo "[X] Продать"
+    of Want.Buy: 
+      if itemIndex != -1:
+        echo "[X] Продать"
+      else:
+        echo "У вас нет этого предмета"
     of Want.Sell:
-      if(money-10 > 0): echo "[X] Купить"
+      if(money-10 > 0): 
+        if inventory.len < 10:
+          echo "[X] Купить"
+        else: echo "Инвентарь заполнен"
+      else: echo "Не хватает монет"
 
   echo "[C] Отказаться"
 
@@ -50,10 +47,15 @@ while true:
     case input:
       of 'X', 'x':
         if want == Want.Sell:
-          if money-10 > 0:
+          if money-10 > 0 and inventory.len < 10:
             money -= 10
+            inventory.add(itemType)
+          else:continue
         else:
-          money += 12
+          if itemIndex != -1:
+            money += 12
+            inventory.del(itemIndex)
+          else:continue
         # echo "Монет: ", money
         break
       of 'C', 'c':
