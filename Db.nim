@@ -7,6 +7,18 @@ type
   ItemType* = enum
     Sword, Bow, Knife
 
+# Информация о создаваемом предмете
+  ItemInfo = tuple
+    name: string
+    #itemType:ItemType
+    costMin: int
+    costMax: int
+
+  Item* = tuple
+    name: string
+    #itemEnum: ItemType
+    cost: int
+
   ClassType = tuple
     name: string
     itemsType: seq[ItemType]
@@ -14,10 +26,14 @@ type
   Client = tuple
     classType: ClassType
     want: Want
-    itemType: ItemType
+    item: Item
 
 var
-  classes*: seq[ClassType]
+  classes: seq[ClassType]
+  items = [
+  ItemType.Sword: (name:"Меч", costMin:5, costMax:15),
+  ItemType.Bow: (name:"Лук", costMin:8, costMax:13),
+  ItemType.Knife: (name:"Нож", costMin:5, costMax:8)]
 
 classes = @[
   (
@@ -32,6 +48,7 @@ classes = @[
 # classes.add(("Воин", @[ItemType.Sword, ItemType.Knife]))
 # classes.add(("Лучник", @[ItemType.Bow, ItemType.Knife]))
 
+proc createItem(itemInfo:ItemInfo):Item
 
 randomize()
 
@@ -51,7 +68,7 @@ proc getRandomClient*(): Client =
   # Выбираем случайный предмет, который клиент будет покупать или продавать
   assert(class.itemsType.len != 0, "Error: Class haven't items type")
   r = rand(high(class.itemsType))
-  let item: ItemType = class.itemsType[r]
+  let item: Item = createItem(items[ class.itemsType[r]])
 
   # Случайно выбираем, хочет ли клиент купить или продать
   let want: Want = randWant()
@@ -59,7 +76,13 @@ proc getRandomClient*(): Client =
   # "Собираем" клиента
   result.want = want
   result.classType = class
-  result.itemType = item
+  result.item = item
+
+proc createItem(itemInfo:ItemInfo):Item =
+  var r = rand(itemInfo.costMin..itemInfo.costMax)
+  # result.itemEnum = itemInfo.itemType
+  result.name = itemInfo.name
+  result.cost = r
 
 when isMainModule:
   echo classes

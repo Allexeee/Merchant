@@ -2,7 +2,7 @@ import Db, terminal
 
 var 
   money = 100
-  inventory: seq[ItemType];
+  inventory: seq[Item];
 
 include Hello
 
@@ -12,31 +12,35 @@ while true:
   eraseScreen(stdin)
   setCursorPos(stdin, 0, 0)
 
-  var (classType, want, itemType) = getRandomClient()
+  var (classType, want, item) = getRandomClient()
 
   echo "У Вас новый клиент! (", i, ")"
   echo "Класс: ", classType.name
   case want
-    of Want.Buy: echo "Покупает: ", itemType, " по цене 12"
-    of Want.Sell: echo "Продает: ", itemType, " по цене 10 (можно продать за 12)"
+    of Want.Buy: echo "Покупает: ", item.name
+    of Want.Sell: echo "Продает: ", item.name
   echo "============================="
   echo "У вас ", money, " монет"
+
   var str:string = ""
   for i, value in inventory:
-    str = str & "\t" & $value
+    str = str & "\t" & value.name & " (" & $value.cost & ")"
   echo "Инвентарь: ",str
   echo ""
-  let itemIndex = inventory.find(itemType) 
+
+  let itemIndex = inventory.find(item) 
+  let costSell = item.cost + (0.1 * item.cost.toFloat).toInt
+
   case want
     of Want.Buy: 
       if itemIndex != -1:
-        echo "[X] Продать"
+        echo "[X] Продать за ", costSell
       else:
         echo "У вас нет этого предмета"
     of Want.Sell:
-      if(money-10 > 0): 
+      if(money-item.cost > 0): 
         if inventory.len < 10:
-          echo "[X] Купить"
+          echo "[X] Купить за ", item.cost
         else: echo "Инвентарь заполнен"
       else: echo "Не хватает монет"
 
@@ -47,13 +51,13 @@ while true:
     case input:
       of 'X', 'x':
         if want == Want.Sell:
-          if money-10 > 0 and inventory.len < 10:
-            money -= 10
-            inventory.add(itemType)
+          if money - item.cost > 0 and inventory.len < 10:
+            money -= item.cost
+            inventory.add(item)
           else:continue
         else:
           if itemIndex != -1:
-            money += 12
+            money += costSell
             inventory.del(itemIndex)
           else:continue
         # echo "Монет: ", money
