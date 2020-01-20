@@ -6,6 +6,18 @@ var
 
 include Hello
 
+# proc findInInventory(item:Item):Item =
+#   for i, value in inventory:
+#     if value.itemType == item.valueType: return
+#     inc(result)
+#   result = -1
+
+proc findInInvetory(item:Item):int =
+  for i, value in inventory:
+    if value.itemType == item.itemType: return
+    inc(result)
+  result = -1
+
 var i: int = 0
 while true:
   # discard getch()
@@ -28,19 +40,19 @@ while true:
   echo "Инвентарь: ",str
   echo ""
 
-  let itemIndex = inventory.find(item) 
+  let itemIndex = findInInvetory(item)
   let costSell = item.cost + (0.1 * item.cost.toFloat).toInt
 
   case want
     of Want.Buy: 
       if itemIndex != -1:
-        echo "[X] Продать за ", costSell
+        echo "[X] Продать ",item.name," за ", costSell
       else:
         echo "У вас нет этого предмета"
     of Want.Sell:
       if(money-item.cost > 0): 
         if inventory.len < 10:
-          echo "[X] Купить за ", item.cost
+          echo "[X] Купить ",item.name," за ", item.cost
         else: echo "Инвентарь заполнен"
       else: echo "Не хватает монет"
 

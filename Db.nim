@@ -10,13 +10,13 @@ type
 # Информация о создаваемом предмете
   ItemInfo = tuple
     name: string
-    #itemType:ItemType
+    # itemType:ItemType
     costMin: int
     costMax: int
 
   Item* = tuple
     name: string
-    #itemEnum: ItemType
+    itemType: ItemType
     cost: int
 
   ClassType = tuple
@@ -48,7 +48,11 @@ classes = @[
 # classes.add(("Воин", @[ItemType.Sword, ItemType.Knife]))
 # classes.add(("Лучник", @[ItemType.Bow, ItemType.Knife]))
 
-proc createItem(itemInfo:ItemInfo):Item
+proc createItem(itemInfo:ItemInfo, itemType:ItemType):Item =
+  var r = rand(itemInfo.costMin..itemInfo.costMax)
+  result.itemType = itemType
+  result.name = itemInfo.name
+  result.cost = r
 
 randomize()
 
@@ -68,7 +72,8 @@ proc getRandomClient*(): Client =
   # Выбираем случайный предмет, который клиент будет покупать или продавать
   assert(class.itemsType.len != 0, "Error: Class haven't items type")
   r = rand(high(class.itemsType))
-  let item: Item = createItem(items[ class.itemsType[r]])
+  let itemType = class.itemsType[r]
+  let item: Item = createItem(items[itemType], itemType)
 
   # Случайно выбираем, хочет ли клиент купить или продать
   let want: Want = randWant()
@@ -78,11 +83,6 @@ proc getRandomClient*(): Client =
   result.classType = class
   result.item = item
 
-proc createItem(itemInfo:ItemInfo):Item =
-  var r = rand(itemInfo.costMin..itemInfo.costMax)
-  # result.itemEnum = itemInfo.itemType
-  result.name = itemInfo.name
-  result.cost = r
 
 when isMainModule:
   echo classes
