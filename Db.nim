@@ -5,7 +5,7 @@ type
     Buy, Sell
 
   ItemType* = enum
-    Sword, Bow, Knife
+    Sword, Bow, Knife, Axe, Ore, Potion, HeavyArmor, LightArmor
 
 # Информация о создаваемом предмете
   ItemInfo = tuple
@@ -33,17 +33,30 @@ var
   items = [
   ItemType.Sword: (name:"Меч", costMin:5, costMax:15),
   ItemType.Bow: (name:"Лук", costMin:8, costMax:13),
-  ItemType.Knife: (name:"Нож", costMin:5, costMax:8)]
+  ItemType.Knife: (name:"Нож", costMin:5, costMax:8),
+  ItemType.Axe: (name:"Топор", costMin:5, costMax:15),
+  ItemType.Ore: (name:"Железная руда", costMin:1, costMax:20),
+  ItemType.Potion: (name:"Зелье здоровья", costMin:3, costMax:10),
+  ItemType.HeavyArmor:(name:"Тяжелые доспехи", costMin:10, costMax:20),
+  ItemType.LightArmor:(name:"Легкие доспехи", costMin:5, costMax:18)]
 
 classes = @[
   (
     "Воин",
-    @[ItemType.Sword, ItemType.Knife]
+    @[ItemType.Sword, ItemType.Knife, ItemType.Potion, ItemType.HeavyArmor]
   ),
   (
     "Лучник",
-    @[ItemType.Bow, ItemType.Knife]
+    @[ItemType.Bow, ItemType.Knife, ItemType.Potion, ItemType.LightArmor]
   ),
+  (
+    "Кузнец",
+    @[ItemType.Sword, ItemType.Ore, ItemType.HeavyArmor, ItemType.LightArmor]
+  ),
+  (
+    "Берсерк",
+    @[ItemType.Axe, ItemType.HeavyArmor]
+  )
 ]
 # classes.add(("Воин", @[ItemType.Sword, ItemType.Knife]))
 # classes.add(("Лучник", @[ItemType.Bow, ItemType.Knife]))

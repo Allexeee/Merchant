@@ -1,6 +1,11 @@
 import Db, terminal
 
+type
+  End = enum
+    None, Win, Lose
+
 var 
+  endGame:End
   money = 100
   inventory: seq[Item];
 
@@ -58,8 +63,12 @@ while true:
 
   echo "[C] Отказаться"
 
-  while true:
-    var input = getch()
+  while endGame == End.None:
+    var input:char
+    try:
+      input = getch()
+    except:
+      echo "Используйте другую раскладку клавиатуры"
     case input:
       of 'X', 'x':
         if want == Want.Sell:
