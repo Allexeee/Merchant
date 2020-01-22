@@ -7,7 +7,10 @@ type
 var 
   endGame:End
   money = 100
-  inventory: seq[Item];
+  inventory*: seq[Item];
+
+include gameExtention
+
 
 include Hello
 
@@ -17,11 +20,7 @@ include Hello
 #     inc(result)
 #   result = -1
 
-proc findInInvetory(item:Item):int =
-  for i, value in inventory:
-    if value.itemType == item.itemType: return
-    inc(result)
-  result = -1
+
 
 var i: int = 0
 while true:
@@ -37,13 +36,8 @@ while true:
     of Want.Buy: echo "Покупает: ", item.name
     of Want.Sell: echo "Продает: ", item.name
   echo "============================="
-  echo "У вас ", money, " монет"
-
-  var str:string = ""
-  for i, value in inventory:
-    str = str & "\t" & value.name & " (" & $value.cost & ")"
-  echo "Инвентарь: ",str
   echo ""
+  echo "У вас ", money, " монет"
 
   let itemIndex = findInInvetory(item)
   let costSell = item.cost + (0.1 * item.cost.toFloat).toInt
@@ -62,6 +56,9 @@ while true:
       else: echo "Не хватает монет"
 
   echo "[C] Отказаться"
+
+  echo ""
+  showInventory()
 
   while endGame == End.None:
     var input:char
