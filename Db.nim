@@ -35,7 +35,7 @@ var
   ItemType.Bow: (name:"Лук", costMin:8, costMax:13),
   ItemType.Knife: (name:"Нож", costMin:5, costMax:8),
   ItemType.Axe: (name:"Топор", costMin:5, costMax:15),
-  ItemType.Ore: (name:"Железная руда", costMin:1, costMax:20),
+  ItemType.Ore: (name:"Железная руда", costMin:3, costMax:20),
   ItemType.Potion: (name:"Зелье здоровья", costMin:3, costMax:10),
   ItemType.HeavyArmor:(name:"Тяжелые доспехи", costMin:10, costMax:20),
   ItemType.LightArmor:(name:"Легкие доспехи", costMin:5, costMax:18)]

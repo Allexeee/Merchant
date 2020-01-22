@@ -23,7 +23,7 @@ include Hello
 
 
 var i: int = 0
-while true:
+while endGame == End.None:
   # discard getch()
   eraseScreen(stdin)
   setCursorPos(stdin, 0, 0)
@@ -60,7 +60,7 @@ while true:
   echo ""
   showInventory()
 
-  while endGame == End.None:
+  while true:
     var input:char
     try:
       input = getch()
@@ -71,11 +71,13 @@ while true:
         if want == Want.Sell:
           if money - item.cost > 0 and inventory.len < 10:
             money -= item.cost
+            if money <= 3 : endGame = End.Lose
             inventory.add(item)
           else:continue
         else:
           if itemIndex != -1:
             money += costSell
+            if money >= 200 : endGame = End.Win
             inventory.del(itemIndex)
           else:continue
         # echo "Монет: ", money
@@ -86,3 +88,21 @@ while true:
         continue
 
   inc(i)
+
+eraseScreen(stdin)
+setCursorPos(stdin, 0, 0)
+
+case endGame:
+  of End.Win:
+    echo "Вы богач! Вы неплохо обращаетесь с деньгами!"
+  of End.Lose:
+    echo "Вы банкрот! Вы совсем не умеете обращаться с деньгами..."
+  else:
+    echo "Что-то пошло не так... Сообщите разработчику"
+
+echo "Нажмите на любую клавишу, чтобы завершить программу"
+
+try:
+  discard getch()
+except:
+  echo ""
