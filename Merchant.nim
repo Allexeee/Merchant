@@ -28,6 +28,13 @@ while endGame == End.None:
   eraseScreen(stdin)
   setCursorPos(stdin, 0, 0)
 
+  if(i mod 10) == 0 and i != 0:
+    money-=20
+    echo "Вы заплатили налог в 20 золотых!"
+    if money <= 3 : 
+      endGame = End.Lose
+      break
+
   var (classType, want, item) = getRandomClient()
 
   echo "У Вас новый клиент! (", i, ")"
