@@ -14,17 +14,8 @@ include gameExtention
 
 include Hello
 
-# proc findInInventory(item:Item):Item =
-#   for i, value in inventory:
-#     if value.itemType == item.valueType: return
-#     inc(result)
-#   result = -1
-
-
-
 var i: int = 0
 while endGame == End.None:
-  # discard getch()
   eraseScreen(stdin)
   setCursorPos(stdin, 0, 0)
 
