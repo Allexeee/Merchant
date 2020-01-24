@@ -8,7 +8,7 @@ type
     Sword, Bow, Knife, Axe, Ore, Potion, HeavyArmor, LightArmor
 
 # Информация о создаваемом предмете
-  ItemInfo = tuple
+  ItemInfo* = tuple
     name: string
     # itemType:ItemType
     costMin: int
@@ -30,7 +30,7 @@ type
 
 var
   classes: seq[ClassType]
-  items = [
+  db_items* = [
   ItemType.Sword: (name:"Меч", costMin:5, costMax:15),
   ItemType.Bow: (name:"Лук", costMin:8, costMax:13),
   ItemType.Knife: (name:"Нож", costMin:5, costMax:8),
@@ -83,10 +83,10 @@ proc getRandomClient*(): Client =
   let class: ClassType = classes[r]
 
   # Выбираем случайный предмет, который клиент будет покупать или продавать
-  assert(class.itemsType.len != 0, "Error: Class haven't items type")
+  assert(class.itemsType.len != 0, "Error: Class haven't db_items type")
   r = rand(high(class.itemsType))
   let itemType = class.itemsType[r]
-  let item: Item = createItem(items[itemType], itemType)
+  let item: Item = createItem(db_items[itemType], itemType)
 
   # Случайно выбираем, хочет ли клиент купить или продать
   let want: Want = randWant()

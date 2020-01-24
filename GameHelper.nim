@@ -1,3 +1,8 @@
+import random
+
+randomize()
+
+
 proc findInInvetory(item:Item):int =
   for i, value in inventory:
     if value.itemType == item.itemType: return
@@ -10,3 +15,7 @@ proc showInventory(): void =
     if value.name == "": continue
     str = str & "\t" & value.name & " (" & $value.cost & ")"
   echo "Инвентарь: ",str
+
+proc random[T](list:openArray[T]):T =
+  let r = rand(list.len-1)
+  return list[r]

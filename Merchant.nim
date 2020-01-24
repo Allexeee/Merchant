@@ -1,4 +1,4 @@
-import Db, terminal
+import db, terminal
 
 type
   End = enum
@@ -9,10 +9,10 @@ var
   money = 100
   inventory*: seq[Item];
 
-include gameExtention
+include gameHelper
 
 
-include Hello
+include gameHello
 
 var i: int = 0
 while endGame == End.None:
@@ -20,12 +20,24 @@ while endGame == End.None:
   setCursorPos(stdin, 0, 0)
 
   if(i mod 10) == 0 and i != 0:
-    money-=20
+    money -= 20
     echo "Вы заплатили налог в 20 золотых!"
-    if money <= 3 : 
+    echo ""
+    if money <= 0 : 
       endGame = End.Lose
       break
+    
+    let costIncrease:int = rand(10)-5
+    var item = db_items.random()
+    item.costMin += costIncrease
+    item.costMax += costIncrease
 
+    if item.costMin < 1: item.costMin = 1
+    if item.costMax < 1: item.costMax = 1
+
+    echo "Цена предмета \"", item.name,"\" изменилась на ", costIncrease 
+    echo ""
+    
   var (classType, want, item) = getRandomClient()
 
   echo "У Вас новый клиент! (", i, ")"
@@ -69,7 +81,7 @@ while endGame == End.None:
         if want == Want.Sell:
           if money - item.cost > 0 and inventory.len < 10:
             money -= item.cost
-            if money <= 3 : endGame = End.Lose
+            if money <= 0 : endGame = End.Lose
             inventory.add(item)
           else:continue
         else:
