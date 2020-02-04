@@ -4,3 +4,6 @@ htmldocs/
 Db.exe
 TestKeyboard.exe
 TestKeyboard.nim
+*.exe
+*.exe
+Merchant.exe
