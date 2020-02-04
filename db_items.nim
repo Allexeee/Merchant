@@ -1,16 +1,21 @@
 type
   ItemIdName = string
-  ItemId = int
-  FaetureId = int
-
+  ItemId = distinct int
+  FaetureId = distinct int
+  FaetureIdName = string
+  Faeture = tuple
+    id: FaetureId
+    val: int
+  
   ItemInfoNew* = tuple
     typ: ItemId
     name: string
-    features: seq[FaetureId]
+    features: seq[Faeture]
 
 var
   itemsInfo: seq[ItemInfoNew]
   itemsName: seq[ItemIdName]
+  faeturesName: seq[FaetureIdName]
 
 itemsName = @[
   ("Меч"),
@@ -18,17 +23,40 @@ itemsName = @[
   ("Нож"),
 ]
 
-var itemInfo: ItemInfoNew
+faeturesName = @[
+  "Урон",
+  "Прочность"
+]
 
-itemInfo.typ = 1
-itemInfo.name = "Test Sword"
-itemInfo.features = @[0, 1]
+itemsInfo = @[
+  (0.ItemId, "Деревянный меч", 
+    @[
+      (0.FaetureId, 1), 
+      (1.FaetureId, 5)
+    ]
+  )
+]
+# var itemInfo: ItemInfoNew
 
-itemsInfo.add itemInfo
+# itemInfo.typ = 0.ItemId
+# itemInfo.name = "Обычный меч"
+# itemInfo.features = @[(1.FaetureId, 20), (0.FaetureId, 10)]
 
-proc getNameTypeItem(i: ItemId):string =
-  return itemsName[i]  
+# itemsInfo.add itemInfo
 
+proc `$` (i: ItemId):string =
+  return itemsName[i.int]  
 
+proc `$` (i: FaetureId):string =
+  return faeturesName[i.int]  
+
+proc `$` (i: seq[Faeture]):string =
+  for ind, value in i:
+    result = result & $value.id & "(" & $value.val & ") " 
+  
+  
+proc `$` (item: ItemInfoNew):string =
+  return "type: " & $item.typ & ", name: " & $item.name & ", features: " & $item.features  
+  
 when isMainModule:
-  echo itemInfo.typ.getNameTypeItem
+  echo itemsInfo
