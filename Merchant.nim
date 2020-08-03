@@ -1,13 +1,24 @@
-import db, terminal
+import terminal, db_items, random
 
 type
   End = enum
     None, Win, Lose
+  
+  Item = tuple
+    info: ItemInfo
+    cost: int
 
 var 
   endGame:End
   money = 100
   inventory*: seq[Item];
+
+proc getItem(): Item =
+  let info = getRandomItem()
+  let maxCost = info.features.sumCostFaeture()
+  let minCost = maxCost div 2
+  let cost = random(minCost,maxCost)
+
 
 include gameHelper
 

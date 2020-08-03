@@ -1,3 +1,5 @@
+import random
+
 type
   ItemIdName = string
   ItemId = distinct int
@@ -7,13 +9,13 @@ type
     id: FaetureId
     val: int
   
-  ItemInfoNew* = tuple
+  ItemInfo* = tuple
     typ: ItemId
     name: string
     features: seq[Faeture]
 
 var
-  itemsInfo: seq[ItemInfoNew]
+  itemsInfo: seq[ItemInfo]
   itemsName: seq[ItemIdName]
   faeturesName: seq[FaetureIdName]
 
@@ -29,34 +31,40 @@ faeturesName = @[
 ]
 
 itemsInfo = @[
-  (0.ItemId, "Деревянный меч", 
+  (0.ItemId, "Обычный меч", 
     @[
       (0.FaetureId, 1), 
       (1.FaetureId, 5)
     ]
-  )
+  ),
+  (1.ItemId, "Обычный лук",
+    @[
+      (0.FaetureId, 2),
+      (1.FaetureId, 3)
+    ]
+  ),
 ]
-# var itemInfo: ItemInfoNew
 
-# itemInfo.typ = 0.ItemId
-# itemInfo.name = "Обычный меч"
-# itemInfo.features = @[(1.FaetureId, 20), (0.FaetureId, 10)]
-
-# itemsInfo.add itemInfo
-
-proc `$` (i: ItemId):string =
+proc `$`* (i: ItemId):string =
   return itemsName[i.int]  
 
-proc `$` (i: FaetureId):string =
+proc `$`* (i: FaetureId):string =
   return faeturesName[i.int]  
 
-proc `$` (i: seq[Faeture]):string =
+proc `$`* (i: seq[Faeture]):string =
   for ind, value in i:
     result = result & $value.id & "(" & $value.val & ") " 
   
-  
-proc `$` (item: ItemInfoNew):string =
+proc `$`* (item: ItemInfo):string =
   return "type: " & $item.typ & ", name: " & $item.name & ", features: " & $item.features  
   
+proc getRandomItem*():ItemInfo =
+  let r = rand(itemsInfo.len-1)
+  return itemsInfo[r]
+
+proc sumCostFaeture*(list: seq[Faeture]):int = 
+  for i, value in list:
+    result += value.val
+
 when isMainModule:
   echo itemsInfo

@@ -16,6 +16,10 @@ proc showInventory(): void =
     str = str & "\t" & value.name & " (" & $value.cost & ")"
   echo "Инвентарь: ",str
 
-proc random[T](list:openArray[T]):T =
+proc random[T]*(list:openArray[T]):T =
+  let r = rand(list.len-1)
+  return list[r]
+
+proc random[T]*(list:seq[T]):T =
   let r = rand(list.len-1)
   return list[r]
